@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block head %}
+   <link rel="stylesheet" href="{{ url_for('static',filename='css/detail.css')}}">
+{% endblock %}
+{% block main %}
+    {% if article.block == 'public' or user and article.author.id == user.id%}
+        <h3 class ="page-title">{{ article.title }}</h3>
+        <p class="article-info">
+            <span>作者:{{ article.author.username }} &nbsp &nbsp</span>
+            <span>时间:{{ article.time }}</span>
+             {% if user and article.author.id == user.id %}
+                 <form action="{{ url_for('delete',article_id = article.id)}}" method="post">
+                     <div class="form-group" style="text-align:right">
+                         <button class="btn btn-primary">删除本条博客</button>
+                     </div>
+                 </form>
+             {% endif %}
+        <hr>
+        <p class="article-content">{{ article.content }}</p>
+        <hr>
+        <form action="{{ url_for('add_comment')}}" method="post">
+            <div class="form-group">
+                <input type="text" name="comment_added"  class="form-control" />
+                <input type="hidden" name="article_id" value="{{ article.id }}" />
+            </div>
+            <div class="form-group" style="text-align:right">
+                <button class="btn btn-primary">发表评论</button>
+            </div>
+        </form>
+        <h4>评论：（{{ article.commentnum }}）</h4>
+        <ul class="comment-list">
+        {% for comment in article.comments %}
+            <li>
+                <div class="user-info">
+                    <img src="{{ url_for('static',filename='images/log.jpg') }}" alt="" class="avatar">
+                    <span class="username"> &nbsp &nbsp{{ comment.author.username }}</span>
+                    <span class="time">{{ comment.time }}</span>
+                </div>
+                <p class="comment-content">{{ comment.content }}</p>
+                {% if user and article.author.id == user.id or user and comment.author.id == user.id%}
+                     <form action="{{ url_for('deletecomment',article_id=article.id,comment_id=comment.id)}}" method="post">
+                         <div class="form-group" style="text-align:right">
+                             <button class="btn btn-primary">删除此评论</button>
+                         </div>
+                     </form>
+                 {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        作者对该文章设置了私密保护，无法查看
+    {% endif %}
+{% endblock %}

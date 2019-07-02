@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}搜索 {{ search_target }}{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
+{% endblock %}
+{% block main %}
+    <h4>搜索 &nbsp{{ search_target }} &nbsp的结果：</h4><hr>
+    <ul class = "article-list-group">
+    {% for article in articles %}
+        {% if article.block != 'personal' and search_target in article.title %}
+            <li>
+                <div class="avatar-group">
+                     <img src="{{ url_for('static', filename = 'images/log.jpg')}}" alt="" class="avatar">
+                </div>
+                <div class = "article-group">
+                     <p class="article-title"><a href="{{ url_for('detail',article_id=article.id)}}">{{ article.title }}</a></p>
+                     <p class="article-content">{{ article.content }}</p>
+                     <div class="article-info">
+                        <span class="article-author"><a href="{{ url_for('home',owner_id=article.author.id)}}">{{ article.author.username }}</a></span>
+                        <span class="article-time">{{ article.time }}</span>
+                     </div>
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endblock %}

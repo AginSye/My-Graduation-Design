@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}首页{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
+{% endblock %}
+{% block main %}
+    <ul class = "article-list-group">
+    {% for article in articles %}
+        {% if article.block != 'personal' %}
+            <li>
+                <div class="avatar-group">
+                     <img src="{{ url_for('static', filename = 'images/log.jpg')}}" alt="" class="avatar">
+                </div>
+                <div class = "article-group">
+                     <p class="article-title"><a href="{{ url_for('detail',article_id=article.id)}}">{{ article.title }}</a></p>
+                     <p class="article-content">{{ article.content }}</p>
+                     <div class="article-info">
+                        <span class="article-author"><a href="{{ url_for('home',owner_id=article.author.id)}}">{{ article.author.username }}</a></span>
+                        <span class="article-time">{{ article.time }}</span>
+                     </div>
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endblock %}
+

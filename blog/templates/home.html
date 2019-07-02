@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ owner.username }}的主页{% endblock %}
+{% block head %}
+   <link rel="stylesheet" href="{{ url_for('static',filename='css/detail.css')}}">
+{% endblock %}
+{% block main %}
+    <h3 class ="page-title">{{ owner.username }}的主页</h3>
+    <p><span>个人信息</span></p>
+    <hr>
+    <p>手机号码：{{ owner.phonenumber }}</p>
+    <hr>
+    <ul class = "article-list-group">
+    {% for article in articles %}
+        {% if user and owner.id == user.id and article.author_id == owner.id%}
+            <li>
+                <div class = "article-group">
+                    <p class="article-title"><a href="{{ url_for('detail',article_id=article.id)}}">{{ article.title }}</a></p>
+                </div>
+            </li>
+        {% elif article.author_id == owner.id and article.block != 'personal' %}
+            <li>
+                <div class = "article-group">
+                    <p class="article-title"><a href="{{ url_for('detail',article_id=article.id)}}">{{ article.title }}</a></p>
+                </div>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+    <hr>
+    {% if user %}
+        {% if owner.id == user.id %}
+            <a href="{{ url_for('change')}}">修改密码</a>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
